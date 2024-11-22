@@ -19,10 +19,6 @@ public class Concert extends Timestamped {
 
     private String title;
 
-    private Date startDay;
-
-    private Date endDay;
-
     private String startTime;
 
     private String endTime;
