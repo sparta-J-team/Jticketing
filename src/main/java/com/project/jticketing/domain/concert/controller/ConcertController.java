@@ -1,6 +1,7 @@
 package com.project.jticketing.domain.concert.controller;
 
 import com.project.jticketing.domain.concert.dto.request.ConcertRegisterRequestDto;
+import com.project.jticketing.domain.concert.dto.response.ConcertListResponseDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertRegisterResponseDto;
 import com.project.jticketing.domain.concert.service.ConcertService;
 import jakarta.validation.Valid;
@@ -23,6 +24,17 @@ public class ConcertController {
             @RequestHeader("Authorization") String authorization) {
 
         ConcertRegisterResponseDto responseDto = concertService.registerConcert(requestDto);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responseDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<ConcertListResponseDto> getAllConcerts(
+            @RequestHeader("Authorization") String authorization) {
+
+        ConcertListResponseDto responseDto = concertService.getAllConcerts();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
