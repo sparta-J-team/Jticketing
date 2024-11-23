@@ -6,10 +6,10 @@ server:
       force: true
 spring:
   datasource:
-    url: {mysql-url}
+    url: jdbc:mysql://localhost:3306/ticketing
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: {mysql-userId}
-    password: {mysql-password}
+    username: root
+    password: 12345678
   sql:
     init:
       mode: always
@@ -27,9 +27,10 @@ spring:
   output:
     ansi:
       enabled: always
-  mvc:
-    throw-exception-if-no-handler-found: true
   servlet:
     multipart:
       max-file-size: 5MB
       max-request-size: 10MB
+jwt:
+  secret:
+    key: g9kszkHTlGSJRtfAUkq8i7d/7+gDayMy0gCEmZS0zOhehRTPyALLoDMCVTwIOpLNl7X7jZLir/vN1PDsU51Ixg==
