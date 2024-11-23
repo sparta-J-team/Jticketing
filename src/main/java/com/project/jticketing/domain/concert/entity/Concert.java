@@ -1,9 +1,12 @@
 package com.project.jticketing.domain.concert.entity;
 
 import com.project.jticketing.domain.common.entity.Timestamped;
+import com.project.jticketing.domain.event.entity.Event;
 import com.project.jticketing.domain.place.entity.Place;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Builder
@@ -29,6 +32,9 @@ public class Concert extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
+
+    @OneToMany(mappedBy = "concert", fetch = FetchType.LAZY)
+    private List<Event> events;
 
     public Concert (String title, String startTime, String endTime, Long price, Place place) {
         this.title = title;
