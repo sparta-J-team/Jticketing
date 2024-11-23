@@ -1,6 +1,7 @@
 package com.project.jticketing.domain.concert.service;
 
 import com.project.jticketing.domain.concert.dto.request.ConcertRegisterRequestDto;
+import com.project.jticketing.domain.concert.dto.response.ConcertListResponseDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertRegisterResponseDto;
 import com.project.jticketing.domain.concert.entity.Concert;
 import com.project.jticketing.domain.concert.repository.ConcertRepository;
@@ -16,14 +17,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ConcertService {
 
     private final ConcertRepository concertRepository;
-    private EventRepository eventRepository;
-    private PlaceRepository placeRepository;
+    private final EventRepository eventRepository;
+    private final PlaceRepository placeRepository;
 
     //Admin 인증 추가 예정
     @Transactional
@@ -57,6 +59,28 @@ public class ConcertService {
         return ConcertRegisterResponseDto.builder()
                 .message("콘서트가 성공적으로 등록되었습니다.")
                 .build();
+    }
+
+    public ConcertListResponseDto getAllConcerts() {
+        List<Concert> concerts = concertRepository.findAll();
+
+        List<ConcertListResponseDto.ConcertInfo> concertInfos = concerts.stream()
+                .map(concert -> ConcertListResponseDto.ConcertInfo.builder()
+                        .title(concert.getTitle())
+                        .eventsDate(concert.getEvents().stream()
+                                .map(event -> event.getConcertDate().toLocalDate().toString())
+                                .collect(Collectors.toList()))
+                        .startTime(concert.getStartTime())
+                        .endTime(concert.getEndTime())
+                        .place(concert.getPlace().getName())
+                        .price(concert.getPrice())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ConcertListResponseDto.builder()
+                .concertList(concertInfos)
+                .build();
+
     }
 
     private void validateConcertConflict(Long placeId, String startTime) {
