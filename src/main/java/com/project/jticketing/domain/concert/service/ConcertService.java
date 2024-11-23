@@ -1,6 +1,7 @@
 package com.project.jticketing.domain.concert.service;
 
 import com.project.jticketing.domain.concert.dto.request.ConcertRegisterRequestDto;
+import com.project.jticketing.domain.concert.dto.response.ConcertDetailResponseDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertListResponseDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertRegisterResponseDto;
 import com.project.jticketing.domain.concert.entity.Concert;
@@ -82,6 +83,25 @@ public class ConcertService {
                 .build();
 
     }
+
+    @Transactional(readOnly = true)
+    public ConcertDetailResponseDto getConcertDetail(Long concertId) {
+
+        Concert concert = concertRepository.findById(concertId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 콘서트를 찾을 수 없습니다."));
+
+        return ConcertDetailResponseDto.builder()
+                .title(concert.getTitle())
+                .eventsDate(concert.getEvents().stream()
+                        .map(event -> event.getConcertDate().toLocalDate().toString())
+                        .collect(Collectors.toList()))
+                .startTime(concert.getStartTime())
+                .endTime(concert.getEndTime())
+                .place(concert.getPlace().getName())
+                .price(concert.getPrice())
+                .build();
+    }
+
 
     private void validateConcertConflict(Long placeId, String startTime) {
         concertRepository.findByPlaceAndStartTime(placeId, startTime)
