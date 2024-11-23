@@ -3,14 +3,13 @@ package com.project.jticketing.domain.concert.entity;
 import com.project.jticketing.domain.common.entity.Timestamped;
 import com.project.jticketing.domain.place.entity.Place;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.Date;
+import lombok.*;
 
 @Getter
+@Builder
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "concerts")
 public class Concert extends Timestamped {
     @Id
@@ -30,4 +29,12 @@ public class Concert extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
+
+    public Concert (String title, String startTime, String endTime, Long price, Place place) {
+        this.title = title;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.price = price;
+        this.place = place;
+    }
 }
