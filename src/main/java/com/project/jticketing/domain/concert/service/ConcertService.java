@@ -28,9 +28,11 @@ public class ConcertService {
     //Admin 인증 추가 예정
     @Transactional
     public ConcertRegisterResponseDto registerConcert(ConcertRegisterRequestDto requestDto) {
-        //장소 존재 확인
+
         Place place = placeRepository.findById(requestDto.getPlaceId())
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 장소 id입니다."));
+
+        validateConcertConflict(requestDto.getPlaceId(), requestDto.getStartTime());
 
         Concert concert = Concert.builder()
                 .title(requestDto.getTitle())
@@ -55,5 +57,12 @@ public class ConcertService {
         return ConcertRegisterResponseDto.builder()
                 .message("콘서트가 성공적으로 등록되었습니다.")
                 .build();
+    }
+
+    private void validateConcertConflict(Long placeId, String startTime) {
+        concertRepository.findByPlaceAndStartTime(placeId, startTime)
+                .ifPresent(concert -> {
+                    throw new IllegalArgumentException("이미 해당 장소와 시작 시간에 등록된 콘서트가 존재합니다.");
+                });
     }
 }
