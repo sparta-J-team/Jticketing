@@ -1,6 +1,7 @@
 package com.project.jticketing.domain.concert.controller;
 
 import com.project.jticketing.domain.concert.dto.request.ConcertRegisterRequestDto;
+import com.project.jticketing.domain.concert.dto.response.ConcertDetailResponseDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertListResponseDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertRegisterResponseDto;
 import com.project.jticketing.domain.concert.service.ConcertService;
@@ -30,6 +31,7 @@ public class ConcertController {
                 .body(responseDto);
     }
 
+    //User 인증 추가 예정
     @GetMapping
     public ResponseEntity<ConcertListResponseDto> getAllConcerts(
             @RequestHeader("Authorization") String authorization) {
@@ -40,4 +42,19 @@ public class ConcertController {
                 .status(HttpStatus.OK)
                 .body(responseDto);
     }
+
+    //User 인증 추가 예정
+    @GetMapping("/{concertId}")
+    public ResponseEntity<ConcertDetailResponseDto> getConcertDetail(
+            @PathVariable Long concertId,
+            @RequestHeader("Authorization") String authorization) {
+
+
+        ConcertDetailResponseDto concertDetail = concertService.getConcertDetail(concertId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(concertDetail);
+    }
+
 }
