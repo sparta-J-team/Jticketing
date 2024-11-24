@@ -5,9 +5,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface ConcertRepository extends JpaRepository<Concert, Long> {
-    @Query("SELECT c FROM Concert c WHERE c.place.id = :placeId AND c.startTime = :startTime")
-    Optional<Concert> findByPlaceAndStartTime(@Param("placeId") Long placeId, @Param("startTime") String startTime);
+
+    Optional<Concert> findByPlaceIdAndStartTime(Long placeId, String startTime);
+
+    @Query("SELECT c FROM Concert c JOIN c.events e WHERE c.place.id = :placeId AND e.concertDate IN :eventDates")
+    Optional<Concert> findByPlaceAndEventDateIn(@Param("placeId") Long placeId, @Param("eventDates") List<LocalDate> eventDates);
 }
