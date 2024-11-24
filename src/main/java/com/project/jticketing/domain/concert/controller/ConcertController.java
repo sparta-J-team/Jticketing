@@ -1,9 +1,9 @@
 package com.project.jticketing.domain.concert.controller;
 
-import com.project.jticketing.domain.concert.dto.request.ConcertRegisterRequestDto;
+import com.project.jticketing.domain.concert.dto.request.ConcertRequestDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertDetailResponseDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertListResponseDto;
-import com.project.jticketing.domain.concert.dto.response.ConcertRegisterResponseDto;
+import com.project.jticketing.domain.concert.dto.response.ConcertResponseDto;
 import com.project.jticketing.domain.concert.service.ConcertService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +20,11 @@ public class ConcertController {
 
     //Admin 인증 추가 예정
     @PostMapping
-    public ResponseEntity<ConcertRegisterResponseDto> registerConcert(
-            @RequestBody @Valid ConcertRegisterRequestDto requestDto,
+    public ResponseEntity<ConcertResponseDto> registerConcert(
+            @RequestBody @Valid ConcertRequestDto requestDto,
             @RequestHeader("Authorization") String authorization) {
 
-        ConcertRegisterResponseDto responseDto = concertService.registerConcert(requestDto);
+        ConcertResponseDto responseDto = concertService.registerConcert(requestDto);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -56,5 +56,15 @@ public class ConcertController {
                 .status(HttpStatus.OK)
                 .body(concertDetail);
     }
+
+    @PutMapping("/api/concert/{concertId}")
+    public ResponseEntity<ConcertResponseDto> updateConcert(@PathVariable Long concertId,
+                                                            @Valid @RequestBody ConcertRequestDto requestDto,
+                                                            @RequestHeader("Authorization") String authorization
+    ) {
+        ConcertResponseDto responseDto = concertService.updateConcert(concertId, requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
 
 }
