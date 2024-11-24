@@ -7,6 +7,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConcertRegisterResponseDto {
+public class ConcertResponseDto {
     private String message;
 }
