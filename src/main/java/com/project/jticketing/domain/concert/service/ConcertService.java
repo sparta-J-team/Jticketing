@@ -84,7 +84,6 @@ public class ConcertService {
 
     }
 
-    @Transactional(readOnly = true)
     public ConcertDetailResponseDto getConcertDetail(Long concertId) {
 
         Concert concert = concertRepository.findById(concertId)
