@@ -1,9 +1,9 @@
 package com.project.jticketing.domain.concert.service;
 
-import com.project.jticketing.domain.concert.dto.request.ConcertRegisterRequestDto;
+import com.project.jticketing.domain.concert.dto.request.ConcertRequestDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertDetailResponseDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertListResponseDto;
-import com.project.jticketing.domain.concert.dto.response.ConcertRegisterResponseDto;
+import com.project.jticketing.domain.concert.dto.response.ConcertResponseDto;
 import com.project.jticketing.domain.concert.entity.Concert;
 import com.project.jticketing.domain.concert.repository.ConcertRepository;
 import com.project.jticketing.domain.event.entity.Event;
@@ -30,7 +30,7 @@ public class ConcertService {
 
     //Admin 인증 추가 예정
     @Transactional
-    public ConcertRegisterResponseDto registerConcert(ConcertRegisterRequestDto requestDto) {
+    public ConcertResponseDto registerConcert(ConcertRequestDto requestDto) {
 
         Place place = placeRepository.findById(requestDto.getPlaceId())
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 장소 id입니다."));
@@ -57,7 +57,7 @@ public class ConcertService {
 
         eventRepository.saveAll(events);
 
-        return ConcertRegisterResponseDto.builder()
+        return ConcertResponseDto.builder()
                 .message("콘서트가 성공적으로 등록되었습니다.")
                 .build();
     }
@@ -101,6 +101,42 @@ public class ConcertService {
                 .build();
     }
 
+    @Transactional
+    public ConcertResponseDto updateConcert(Long concertId, ConcertRequestDto requestDto) {
+
+        Concert concert = concertRepository.findById(concertId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 콘서트를 찾을 수 없습니다."));
+
+        Place place = placeRepository.findById(requestDto.getPlaceId())
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 장소 id입니다."));
+
+        validateConcertConflict(requestDto.getPlaceId(), requestDto.getStartTime());
+
+        concert.update(
+                requestDto.getTitle(),
+                requestDto.getStartTime(),
+                requestDto.getEndTime(),
+                requestDto.getPrice(),
+                place,
+                requestDto.getEventsDate()
+        );
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        List<Event> events = requestDto.getEventsDate().stream()
+                .map(eventDate -> Event.builder()
+                        .concertDate(LocalDateTime.from(LocalDate.parse(eventDate, formatter)))
+                        .concert(concert)
+                        .build())
+                .collect(Collectors.toList());
+
+        eventRepository.deleteAllByConcert(concert);
+        eventRepository.saveAll(events);
+
+        return ConcertResponseDto.builder()
+                .message("콘서트의 상세 정보가 성공적으로 수정되었습니다.")
+                .build();
+    }
 
     private void validateConcertConflict(Long placeId, String startTime) {
         concertRepository.findByPlaceAndStartTime(placeId, startTime)
