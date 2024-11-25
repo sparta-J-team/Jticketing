@@ -1,5 +1,6 @@
 package com.project.jticketing.domain.concert.service;
 
+import com.project.jticketing.config.security.UserDetailsImpl;
 import com.project.jticketing.domain.concert.dto.request.ConcertRequestDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertDetailResponseDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertListResponseDto;
@@ -10,6 +11,7 @@ import com.project.jticketing.domain.event.entity.Event;
 import com.project.jticketing.domain.event.repository.EventRepository;
 import com.project.jticketing.domain.place.entity.Place;
 import com.project.jticketing.domain.place.repository.PlaceRepository;
+import com.project.jticketing.domain.user.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +30,12 @@ public class ConcertService {
     private final EventRepository eventRepository;
     private final PlaceRepository placeRepository;
 
-    //Admin 인증 추가 예정
     @Transactional
-    public ConcertResponseDto registerConcert(ConcertRequestDto requestDto) {
+    public ConcertResponseDto registerConcert(ConcertRequestDto requestDto, UserDetailsImpl userDetails) {
+
+        if (!isAdmin(userDetails)) {
+            return new ConcertResponseDto("관리자 권한이 필요합니다.");
+        }
 
         Place place = placeRepository.findById(requestDto.getPlaceId())
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 장소 id입니다."));
@@ -138,6 +143,9 @@ public class ConcertService {
                 .build();
     }
 
+    private boolean isAdmin(UserDetailsImpl userDetails) {
+        return userDetails.getUser().getUserRole() == UserRole.ADMIN;
+    }
 
     private void validateConcert(Long placeId, String startTime, List<String> eventsDate) {
 
