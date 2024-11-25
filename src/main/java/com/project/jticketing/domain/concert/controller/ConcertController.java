@@ -1,5 +1,6 @@
 package com.project.jticketing.domain.concert.controller;
 
+import com.project.jticketing.config.security.UserDetailsImpl;
 import com.project.jticketing.domain.concert.dto.request.ConcertRequestDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertDetailResponseDto;
 import com.project.jticketing.domain.concert.dto.response.ConcertListResponseDto;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,20 +20,18 @@ public class ConcertController {
 
     private final ConcertService concertService;
 
-    //Admin 인증 추가 예정
     @PostMapping
     public ResponseEntity<ConcertResponseDto> registerConcert(
             @RequestBody @Valid ConcertRequestDto requestDto,
-            @RequestHeader("Authorization") String authorization) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        ConcertResponseDto responseDto = concertService.registerConcert(requestDto);
+        ConcertResponseDto responseDto = concertService.registerConcert(requestDto, userDetails);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(responseDto);
     }
 
-    //User 인증 추가 예정
     @GetMapping
     public ResponseEntity<ConcertListResponseDto> getAllConcerts(
             @RequestHeader("Authorization") String authorization) {
