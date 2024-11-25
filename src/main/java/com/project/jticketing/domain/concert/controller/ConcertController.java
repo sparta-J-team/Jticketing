@@ -56,12 +56,23 @@ public class ConcertController {
                 .body(concertDetail);
     }
 
-    @PutMapping("/api/concert/{concertId}")
+    @PutMapping("/{concertId}")
     public ResponseEntity<ConcertResponseDto> updateConcert(@PathVariable Long concertId,
                                                             @Valid @RequestBody ConcertRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         ConcertResponseDto responseDto = concertService.updateConcert(concertId, requestDto, userDetails);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responseDto);
+    }
+
+    @DeleteMapping("/{concertId}")
+    public ResponseEntity<ConcertResponseDto> deleteConcert(@PathVariable Long concertId,
+                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        ConcertResponseDto responseDto = concertService.deleteConcert(concertId, userDetails);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(responseDto);
