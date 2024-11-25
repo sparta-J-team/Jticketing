@@ -67,7 +67,12 @@ public class ConcertService {
                 .build();
     }
 
-    public ConcertListResponseDto getAllConcerts() {
+    public ConcertListResponseDto getAllConcerts(UserDetailsImpl userDetails) {
+
+        if (userDetails == null) {
+            throw new IllegalArgumentException("콘서트를 보려면 사용자 인증을 받아야 합니다.");
+        }
+
         List<Concert> concerts = concertRepository.findAll();
 
         List<ConcertListResponseDto.ConcertInfo> concertInfos = concerts.stream()
