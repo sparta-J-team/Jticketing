@@ -32,7 +32,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserInfoResponseDto findUser(Long userId) {
+    public UserInfoResponseDto getUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new RuntimeException("유저를 찾을 수 없습니다")
         );
