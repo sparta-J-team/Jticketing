@@ -59,11 +59,11 @@ public class ConcertController {
     @PutMapping("/api/concert/{concertId}")
     public ResponseEntity<ConcertResponseDto> updateConcert(@PathVariable Long concertId,
                                                             @Valid @RequestBody ConcertRequestDto requestDto,
-                                                            @RequestHeader("Authorization") String authorization
+                                                            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        ConcertResponseDto responseDto = concertService.updateConcert(concertId, requestDto);
-        return ResponseEntity.ok(responseDto);
+        ConcertResponseDto responseDto = concertService.updateConcert(concertId, requestDto, userDetails);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responseDto);
     }
-
-
 }
