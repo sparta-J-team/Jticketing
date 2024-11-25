@@ -22,6 +22,7 @@ import com.project.jticketing.domain.place.dto.request.PlaceRequestDto;
 import com.project.jticketing.domain.place.dto.response.PlaceResponseDto;
 import com.project.jticketing.domain.place.service.PlaceService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,7 +34,7 @@ public class PlaceController {
 	@PostMapping("")
 	public ResponseEntity<PlaceResponseDto> createPlace(
 		@AuthenticationPrincipal UserDetailsImpl authUser,
-		@RequestBody PlaceRequestDto placeRequestDto
+		@Valid @RequestBody PlaceRequestDto placeRequestDto
 	) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(placeService.createPlace(authUser, placeRequestDto));
 	}
@@ -58,7 +59,6 @@ public class PlaceController {
 		@AuthenticationPrincipal UserDetailsImpl authUser,
 		@PathVariable Long placeId,
 		@RequestBody PlaceRequestDto placeRequestDto
-		//추후 권한 추가
 	) {
 		return ResponseEntity.status(HttpStatus.OK).body(placeService.updatePlace(authUser, placeId, placeRequestDto));
 	}

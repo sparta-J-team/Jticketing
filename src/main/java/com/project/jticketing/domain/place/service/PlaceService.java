@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.jticketing.config.security.UserDetailsImpl;
 import com.project.jticketing.domain.place.dto.request.PlaceRequestDto;
@@ -21,6 +22,7 @@ public class PlaceService {
 
 	private final PlaceRepository placeRepository;
 
+	@Transactional
 	public PlaceResponseDto createPlace(UserDetailsImpl authUser, PlaceRequestDto placeRequestDto) {
 		UserRole userRole = authUser.getUser().getUserRole();
 		if(!userRole.equals(UserRole.ADMIN)) {
