@@ -34,7 +34,7 @@ public class ConcertController {
 
     @GetMapping
     public ResponseEntity<ConcertListResponseDto> getAllConcerts(
-            UserDetailsImpl userDetails) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         ConcertListResponseDto responseDto = concertService.getAllConcerts(userDetails);
 
@@ -43,14 +43,13 @@ public class ConcertController {
                 .body(responseDto);
     }
 
-    //User 인증 추가 예정
     @GetMapping("/{concertId}")
     public ResponseEntity<ConcertDetailResponseDto> getConcertDetail(
             @PathVariable Long concertId,
-            @RequestHeader("Authorization") String authorization) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
 
-        ConcertDetailResponseDto concertDetail = concertService.getConcertDetail(concertId);
+        ConcertDetailResponseDto concertDetail = concertService.getConcertDetail(concertId, userDetails);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
