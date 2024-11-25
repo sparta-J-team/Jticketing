@@ -156,6 +156,23 @@ public class ConcertService {
                 .build();
     }
 
+    @Transactional
+    public ConcertResponseDto deleteConcert(Long concertId, UserDetailsImpl userDetails) {
+
+        if (isAdmin(userDetails)) {
+            return new ConcertResponseDto("관리자 권한이 필요합니다.");
+        }
+
+        Concert concert = concertRepository.findById(concertId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 콘서트를 찾을 수 없습니다."));
+
+        concertRepository.delete(concert);
+
+        return ConcertResponseDto.builder()
+                .message("해당 콘서트가 삭제되었습니다.")
+                .build();
+    }
+
     private boolean isAdmin(UserDetailsImpl userDetails) {
         return userDetails.getUser().getUserRole() != UserRole.ADMIN;
     }
