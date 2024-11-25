@@ -33,7 +33,7 @@ public class ConcertService {
     @Transactional
     public ConcertResponseDto registerConcert(ConcertRequestDto requestDto, UserDetailsImpl userDetails) {
 
-        if (!isAdmin(userDetails)) {
+        if (isAdmin(userDetails)) {
             return new ConcertResponseDto("관리자 권한이 필요합니다.");
         }
 
@@ -118,7 +118,7 @@ public class ConcertService {
     @Transactional
     public ConcertResponseDto updateConcert(Long concertId, ConcertRequestDto requestDto, UserDetailsImpl userDetails) {
 
-        if (!isAdmin(userDetails)) {
+        if (isAdmin(userDetails)) {
             return new ConcertResponseDto("관리자 권한이 필요합니다.");
         }
 
@@ -157,7 +157,7 @@ public class ConcertService {
     }
 
     private boolean isAdmin(UserDetailsImpl userDetails) {
-        return userDetails.getUser().getUserRole() == UserRole.ADMIN;
+        return userDetails.getUser().getUserRole() != UserRole.ADMIN;
     }
 
     private void validateConcert(Long placeId, String startTime, List<String> eventsDate) {
