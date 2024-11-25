@@ -6,10 +6,10 @@ server:
       force: true
 spring:
   datasource:
-    url: {mysql-url}
+    url: jdbc:mysql://localhost:3306/outsourcing
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: {mysql-userId}
-    password: {mysql-password}
+    username: root
+    password: 00000000
   sql:
     init:
       mode: always
