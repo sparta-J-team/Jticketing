@@ -94,7 +94,11 @@ public class ConcertService {
 
     }
 
-    public ConcertDetailResponseDto getConcertDetail(Long concertId) {
+    public ConcertDetailResponseDto getConcertDetail(Long concertId, UserDetailsImpl userDetails) {
+
+        if (userDetails == null) {
+            throw new IllegalArgumentException("콘서트를 보려면 사용자 인증을 받아야 합니다.");
+        }
 
         Concert concert = concertRepository.findById(concertId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 콘서트를 찾을 수 없습니다."));
