@@ -5,10 +5,12 @@ import com.project.jticketing.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
 @Entity
+@Setter
 @NoArgsConstructor
 @Table(name = "users")
 public class User extends Timestamped {
