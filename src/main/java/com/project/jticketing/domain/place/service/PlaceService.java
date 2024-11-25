@@ -5,10 +5,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.project.jticketing.config.security.UserDetailsImpl;
 import com.project.jticketing.domain.place.dto.request.PlaceRequestDto;
 import com.project.jticketing.domain.place.dto.response.PlaceResponseDto;
 import com.project.jticketing.domain.place.entity.Place;
 import com.project.jticketing.domain.place.repository.PlaceRepository;
+import com.project.jticketing.domain.user.entity.User;
+import com.project.jticketing.domain.user.enums.UserRole;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,10 +21,13 @@ public class PlaceService {
 
 	private final PlaceRepository placeRepository;
 
-	public PlaceResponseDto createPlace(PlaceRequestDto placeRequestDto) {
-		Place place = Place.createOf(placeRequestDto.getName(), placeRequestDto.getSeatCount());
+	public PlaceResponseDto createPlace(UserDetailsImpl authUser, PlaceRequestDto placeRequestDto) {
+		UserRole userRole = authUser.getUser().getUserRole();
+		if(!userRole.equals(UserRole.ADMIN)) {
+			throw new IllegalArgumentException("권한이 없습니다");
+		}
 
-		//권한 관련 예외처리 코드
+		Place place = Place.createOf(placeRequestDto.getName(), placeRequestDto.getSeatCount());
 
 		return new PlaceResponseDto(placeRepository.save(place));
 	}
@@ -40,11 +46,14 @@ public class PlaceService {
 		return new PlaceResponseDto(place);
 	}
 
-	public PlaceResponseDto updatePlace(Long placeId, PlaceRequestDto placeRequestDto) {
+	public PlaceResponseDto updatePlace(UserDetailsImpl authUser, Long placeId, PlaceRequestDto placeRequestDto) {
 		Place place = placeRepository.findById(placeId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 콘서트 장소가 존재하지 않습니다"));
 
-		//권한 관련 예외처리 코드
+		UserRole userRole = authUser.getUser().getUserRole();
+		if(!userRole.equals(UserRole.ADMIN)) {
+			throw new IllegalArgumentException("권한이 없습니다");
+		}
 
 		place.updateOf(placeRequestDto.getName(), placeRequestDto.getSeatCount());
 
@@ -52,11 +61,14 @@ public class PlaceService {
 
 	}
 
-	public void deletePlace(Long placeId) {
+	public void deletePlace(UserDetailsImpl authUser, Long placeId) {
 		Place place = placeRepository.findById(placeId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 콘서트 장소가 존재하지 않습니다"));
 
-		//권한 관련 예외처리 코드
+		UserRole userRole = authUser.getUser().getUserRole();
+		if(!userRole.equals(UserRole.ADMIN)) {
+			throw new IllegalArgumentException("권한이 없습니다");
+		}
 
 		placeRepository.delete(place);
 	}

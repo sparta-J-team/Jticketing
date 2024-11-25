@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.jticketing.config.security.UserDetailsImpl;
 import com.project.jticketing.domain.place.dto.request.PlaceRequestDto;
 import com.project.jticketing.domain.place.dto.response.PlaceResponseDto;
 import com.project.jticketing.domain.place.service.PlaceService;
@@ -30,10 +32,10 @@ public class PlaceController {
 
 	@PostMapping("")
 	public ResponseEntity<PlaceResponseDto> createPlace(
+		@AuthenticationPrincipal UserDetailsImpl authUser,
 		@RequestBody PlaceRequestDto placeRequestDto
-		//추후 권한 추가
 	) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(placeService.createPlace(placeRequestDto));
+		return ResponseEntity.status(HttpStatus.CREATED).body(placeService.createPlace(authUser, placeRequestDto));
 	}
 
 	@GetMapping("")
@@ -53,18 +55,20 @@ public class PlaceController {
 
 	@PatchMapping("/{placeId}")
 	public ResponseEntity<PlaceResponseDto> updatePlace(
+		@AuthenticationPrincipal UserDetailsImpl authUser,
 		@PathVariable Long placeId,
 		@RequestBody PlaceRequestDto placeRequestDto
 		//추후 권한 추가
 	) {
-		return ResponseEntity.status(HttpStatus.OK).body(placeService.updatePlace(placeId, placeRequestDto));
+		return ResponseEntity.status(HttpStatus.OK).body(placeService.updatePlace(authUser, placeId, placeRequestDto));
 	}
 
 	@DeleteMapping("/{placeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deletePlace(
+		@AuthenticationPrincipal UserDetailsImpl authUser,
 		@PathVariable Long placeId
 	) {
-		placeService.deletePlace(placeId);
+		placeService.deletePlace(authUser, placeId);
 	}
 }
