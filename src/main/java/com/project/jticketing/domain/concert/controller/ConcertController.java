@@ -34,9 +34,9 @@ public class ConcertController {
 
     @GetMapping
     public ResponseEntity<ConcertListResponseDto> getAllConcerts(
-            @RequestHeader("Authorization") String authorization) {
+            UserDetailsImpl userDetails) {
 
-        ConcertListResponseDto responseDto = concertService.getAllConcerts();
+        ConcertListResponseDto responseDto = concertService.getAllConcerts(userDetails);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
