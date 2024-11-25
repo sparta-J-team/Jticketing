@@ -116,7 +116,11 @@ public class ConcertService {
     }
 
     @Transactional
-    public ConcertResponseDto updateConcert(Long concertId, ConcertRequestDto requestDto) {
+    public ConcertResponseDto updateConcert(Long concertId, ConcertRequestDto requestDto, UserDetailsImpl userDetails) {
+
+        if (!isAdmin(userDetails)) {
+            return new ConcertResponseDto("관리자 권한이 필요합니다.");
+        }
 
         Concert concert = concertRepository.findById(concertId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 콘서트를 찾을 수 없습니다."));
