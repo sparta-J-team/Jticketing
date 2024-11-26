@@ -24,19 +24,19 @@ public class ReservationService {
         String lockKey = lockKeyPrefix + seatNum;
         String lockValue = redisLock.acquireLock(lockKey, 5000); // 5초 유효기간
 
+        if (reservationRepository.existsBySeatNum(seatNum)) {
+            throw new IllegalArgumentException("해당 좌석은 예매가 완료되었습니다.");
+        }
+
         if (lockValue == null) {
             throw new IllegalStateException("현재 다른 사용자가 해당 좌석을 예약 중입니다. 다시 시도하세요.");
         }
 
+        Event event = eventRepository.findById(eventId).orElseThrow(
+                () -> new IllegalArgumentException("해당 콘서트 정보가 존재하지 않습니다")
+        );
+
         try {
-            if (reservationRepository.existsBySeatNum(seatNum)) {
-                throw new IllegalArgumentException("해당 좌석은 예매가 완료되었습니다.");
-            }
-
-            Event event = eventRepository.findById(eventId).orElseThrow(
-                    () -> new IllegalArgumentException("해당 콘서트 정보가 존재하지 않습니다")
-            );
-
             Reservation reservation = new Reservation(seatNum, user, event);
             reservationRepository.save(reservation);
 
@@ -47,3 +47,6 @@ public class ReservationService {
         }
     }
 }
+
+// 락을 획득하지 못했을 때의 동작 방식은 정하기 나름,
+// 예를 들어 대기, 재시도, 포기 등
