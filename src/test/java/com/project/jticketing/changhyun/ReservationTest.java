@@ -1,5 +1,5 @@
 package com.project.jticketing.changhyun;
-
+import com.project.jticketing.config.redis.RedisLock;
 import com.project.jticketing.domain.event.entity.Event;
 import com.project.jticketing.domain.event.repository.EventRepository;
 import com.project.jticketing.domain.reservation.dto.request.ReservationRequestDTO;
@@ -14,12 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.UUID;
+import java.util.concurrent.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,9 +30,11 @@ public class ReservationTest {
     private ReservationRepository reservationRepository;
     @Mock
     private EventRepository eventRepository;
+    @Mock
+    private RedisLock redisLock;
+
     @InjectMocks
     private ReservationService reservationService;
-
 
     @Test
     @DisplayName("같은 자리-seatNum-에 동시에 10개의 요청이 들어오는 경우")
@@ -40,40 +43,71 @@ public class ReservationTest {
         User user = new User();
         user.setId(1L);
         Long eventId = 1L;
+        Long seatNum = 1L;
         ReservationRequestDTO requestDTO = new ReservationRequestDTO();
-        requestDTO.setSeatNum(1L);
+        requestDTO.setSeatNum(seatNum);
         int numberOfThreads = 10;
 
         Event event = Event.builder()
                 .id(eventId)
                 .build();
 
-        Reservation reservation = new Reservation(requestDTO.getSeatNum(), user, event);
+        // 락 획득 모킹
+        when(redisLock.acquireLock(anyString(), anyLong()))
+                .thenReturn(UUID.randomUUID().toString()) // 첫 번째 요청만 성공
+                .thenReturn(null);  // 나머지 요청은 실패
 
-        when(reservationRepository.existsBySeatNum(requestDTO.getSeatNum())).thenReturn(true);
+        // 락 해제 모킹 (모든 요청에 대해 true 반환)
+        when(redisLock.releaseLock(anyString(), anyString())).thenReturn(true);
+
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(reservationRepository.existsBySeatNum(seatNum)).thenReturn(false);
 
-        CyclicBarrier barrier = new CyclicBarrier(numberOfThreads); // 동기화 도구
+        CyclicBarrier barrier = new CyclicBarrier(numberOfThreads);
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
+
+        List<Future<String>> futures = new ArrayList<>();
 
         // WHEN
         for (int i = 0; i < numberOfThreads; i++) {
-            executorService.submit(() -> {
+            futures.add(executorService.submit(() -> {
                 try {
                     barrier.await(); // 모든 쓰레드가 준비될 때까지 대기
-
-                    // 동시성 테스트: 동일한 좌석에 대해 여러 요청을 보냄
-                    reservationService.reserve(user, eventId, requestDTO);
+                    return reservationService.reserve(user, eventId, requestDTO);
                 } catch (Exception e) {
-                    System.out.println("Exception: " + e.getMessage());
+                    return e.getMessage();
                 }
-            });
+            }));
         }
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
 
-        // THEN - 같은 좌석에는 1 번만 예매가 되어야함
+        // THEN
+        long successCount = futures.stream()
+                .filter(future -> {
+                    try {
+                        return "예매 성공".equals(future.get());
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .count();
+
+        // 1개의 예매만 성공해야 함, 1번만 save 호출 검증
+        assertThat(successCount).isEqualTo(1);
         verify(reservationRepository, times(1)).save(any(Reservation.class));
+
+        // 예외 발생 횟수는 9번이어야 함
+        long failureCount = futures.stream()
+                .filter(future -> {
+                    try {
+                        return "현재 다른 사용자가 해당 좌석을 예약 중입니다. 다시 시도하세요.".equals(future.get());
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .count();
+        assertThat(failureCount).isEqualTo(9);
     }
 }
