@@ -56,7 +56,8 @@ public class ConcertService {
 
         List<Event> events = requestDto.getEventsDate().stream()
                 .map(eventDate -> Event.builder()
-                        .concertDate(LocalDateTime.from(LocalDate.parse(eventDate, formatter)))
+                        .concertDate(LocalDate.parse(eventDate, formatter))
+                        .concert(concert)
                         .build())
                 .toList();
 
@@ -79,7 +80,7 @@ public class ConcertService {
                 .map(concert -> ConcertListResponseDto.ConcertInfo.builder()
                         .title(concert.getTitle())
                         .eventsDate(concert.getEvents().stream()
-                                .map(event -> event.getConcertDate().toLocalDate().toString())
+                                .map(event -> event.getConcertDate().toString())
                                 .collect(Collectors.toList()))
                         .startTime(concert.getStartTime())
                         .endTime(concert.getEndTime())
@@ -106,7 +107,7 @@ public class ConcertService {
         return ConcertDetailResponseDto.builder()
                 .title(concert.getTitle())
                 .eventsDate(concert.getEvents().stream()
-                        .map(event -> event.getConcertDate().toLocalDate().toString())
+                        .map(event -> event.getConcertDate().toString())
                         .collect(Collectors.toList()))
                 .startTime(concert.getStartTime())
                 .endTime(concert.getEndTime())
@@ -143,7 +144,7 @@ public class ConcertService {
 
         List<Event> events = requestDto.getEventsDate().stream()
                 .map(eventDate -> Event.builder()
-                        .concertDate(LocalDateTime.from(LocalDate.parse(eventDate, formatter)))
+                        .concertDate(LocalDate.from(LocalDate.parse(eventDate, formatter)))
                         .concert(concert)
                         .build())
                 .collect(Collectors.toList());

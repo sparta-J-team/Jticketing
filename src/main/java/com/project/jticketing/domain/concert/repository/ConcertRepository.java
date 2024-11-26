@@ -13,6 +13,6 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
 
     Optional<Concert> findByPlaceIdAndStartTime(Long placeId, String startTime);
 
-    @Query("SELECT c FROM Concert c JOIN c.events e WHERE c.place.id = :placeId AND e.concertDate IN :eventDates")
+    @Query("SELECT c FROM Concert c JOIN c.events e WHERE c.place.id = :placeId AND FUNCTION('DATE', e.concertDate) IN :eventDates")
     Optional<Concert> findByPlaceAndEventDateIn(@Param("placeId") Long placeId, @Param("eventDates") List<LocalDate> eventDates);
 }

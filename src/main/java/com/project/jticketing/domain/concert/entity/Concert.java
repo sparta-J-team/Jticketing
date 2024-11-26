@@ -50,7 +50,7 @@ public class Concert extends Timestamped {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<Event> updatedEvents = eventsDate.stream()
                 .map(eventDate -> Event.builder()
-                        .concertDate(LocalDateTime.from(LocalDate.parse(eventDate, formatter)))
+                        .concertDate(LocalDate.from(LocalDate.parse(eventDate, formatter)))
                         .concert(this)
                         .build())
                 .toList();

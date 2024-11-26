@@ -18,14 +18,14 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime concertDate;
+    private LocalDate concertDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "concert_id", nullable = false)
     private Concert concert;
 
     public Event(LocalDate concertDate, Concert concert) {
-        this.concertDate = LocalDateTime.from(concertDate);
+        this.concertDate = concertDate;
         this.concert = concert;
     }
 }
