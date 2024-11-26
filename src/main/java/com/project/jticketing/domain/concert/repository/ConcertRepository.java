@@ -11,8 +11,16 @@ import java.util.Optional;
 
 public interface ConcertRepository extends JpaRepository<Concert, Long> {
 
-    Optional<Concert> findByPlaceIdAndStartTime(Long placeId, String startTime);
+    @Query("SELECT c FROM Concert c LEFT JOIN FETCH c.events e LEFT JOIN FETCH c.place")
+    List<Concert> findAllWithEvents();
 
-    @Query("SELECT c FROM Concert c JOIN c.events e WHERE c.place.id = :placeId AND e.concertDate IN :eventDates")
-    Optional<Concert> findByPlaceAndEventDateIn(@Param("placeId") Long placeId, @Param("eventDates") List<LocalDate> eventDates);
+    @Query("SELECT c FROM Concert c LEFT JOIN FETCH c.events e LEFT JOIN FETCH c.place WHERE c.id = :concertId")
+    Optional<Concert> findByIdWithEventsAndPlace(@Param("concertId") Long concertId);
+
+    @Query("SELECT c FROM Concert c LEFT JOIN FETCH c.events e WHERE c.place.id = :placeId AND c.startTime = :startTime AND e.concertDate IN :eventDates")
+    Optional<Concert> findByPlaceAndStartTimeAndEventDates(
+            @Param("placeId") Long placeId,
+            @Param("startTime") String startTime,
+            @Param("eventDates") List<LocalDate> eventDates);
+
 }

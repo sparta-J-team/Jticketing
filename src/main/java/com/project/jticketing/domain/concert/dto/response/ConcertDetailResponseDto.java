@@ -15,6 +15,7 @@ public class ConcertDetailResponseDto {
     private List<String> eventsDate;
     private String startTime;
     private String endTime;
+    private String description;
     private String place;
     private Long price;
 }
