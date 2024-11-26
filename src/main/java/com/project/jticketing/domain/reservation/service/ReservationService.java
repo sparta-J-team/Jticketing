@@ -10,6 +10,8 @@ import com.project.jticketing.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor  // final 이 붙은 필드만 생성자로 만들어줌.
 public class ReservationService {
@@ -21,12 +23,13 @@ public class ReservationService {
 
     public String reserve(User user, Long eventId, ReservationRequestDTO requestDTO) {
         Long seatNum = requestDTO.getSeatNum();
-        String lockKey = lockKeyPrefix + seatNum;
-        String lockValue = redisLock.acquireLock(lockKey, 5000); // 5초 유효기간
 
         if (reservationRepository.existsBySeatNum(seatNum)) {
             throw new IllegalArgumentException("해당 좌석은 예매가 완료되었습니다.");
         }
+
+        String lockKey = lockKeyPrefix + seatNum;
+        String lockValue = redisLock.acquireLock(lockKey, 5000); // 5초 유효기간
 
         if (lockValue == null) {
             throw new IllegalStateException("현재 다른 사용자가 해당 좌석을 예약 중입니다. 다시 시도하세요.");
@@ -37,7 +40,8 @@ public class ReservationService {
         );
 
         try {
-            Reservation reservation = new Reservation(seatNum, user, event);
+            LocalDateTime date = LocalDateTime.now();
+            Reservation reservation = new Reservation(seatNum, user, event, date);
             reservationRepository.save(reservation);
 
             return "예매 성공";
