@@ -7,10 +7,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -37,20 +35,21 @@ public class Concert extends Timestamped {
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
-    @OneToMany(mappedBy = "concert", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "concert", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Event> events;
 
-    public void update(String title, String startTime, String endTime, Long price, Place place, List<String> eventsDate) {
+    public void update(String title, String startTime, String endTime, Long price, String description, Place place, List<String> eventsDate) {
         this.title = title;
         this.startTime = startTime;
         this.endTime = endTime;
         this.price = price;
+        this.description = description;
         this.place = place;
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<Event> updatedEvents = eventsDate.stream()
                 .map(eventDate -> Event.builder()
-                        .concertDate(LocalDateTime.from(LocalDate.parse(eventDate, formatter)))
+                        .concertDate(LocalDate.parse(eventDate, formatter))
                         .concert(this)
                         .build())
                 .toList();

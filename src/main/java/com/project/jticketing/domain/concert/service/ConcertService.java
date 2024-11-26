@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,6 +46,7 @@ public class ConcertService {
                 .startTime(requestDto.getStartTime())
                 .endTime(requestDto.getEndTime())
                 .price(requestDto.getPrice())
+                .description(requestDto.getDescription())
                 .place(place)
                 .build();
 
@@ -56,7 +56,8 @@ public class ConcertService {
 
         List<Event> events = requestDto.getEventsDate().stream()
                 .map(eventDate -> Event.builder()
-                        .concertDate(LocalDateTime.from(LocalDate.parse(eventDate, formatter)))
+                        .concertDate(LocalDate.parse(eventDate, formatter))
+                        .concert(concert)
                         .build())
                 .toList();
 
@@ -73,16 +74,17 @@ public class ConcertService {
             throw new IllegalArgumentException("콘서트를 보려면 사용자 인증을 받아야 합니다.");
         }
 
-        List<Concert> concerts = concertRepository.findAll();
+        List<Concert> concerts = concertRepository.findAllWithEvents();
 
         List<ConcertListResponseDto.ConcertInfo> concertInfos = concerts.stream()
                 .map(concert -> ConcertListResponseDto.ConcertInfo.builder()
                         .title(concert.getTitle())
                         .eventsDate(concert.getEvents().stream()
-                                .map(event -> event.getConcertDate().toLocalDate().toString())
+                                .map(event -> event.getConcertDate().toString())
                                 .collect(Collectors.toList()))
                         .startTime(concert.getStartTime())
                         .endTime(concert.getEndTime())
+                        .description(concert.getDescription())
                         .place(concert.getPlace().getName())
                         .price(concert.getPrice())
                         .build())
@@ -100,16 +102,17 @@ public class ConcertService {
             throw new IllegalArgumentException("콘서트를 보려면 사용자 인증을 받아야 합니다.");
         }
 
-        Concert concert = concertRepository.findById(concertId)
+        Concert concert = concertRepository.findByIdWithEventsAndPlace(concertId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 콘서트를 찾을 수 없습니다."));
 
         return ConcertDetailResponseDto.builder()
                 .title(concert.getTitle())
                 .eventsDate(concert.getEvents().stream()
-                        .map(event -> event.getConcertDate().toLocalDate().toString())
+                        .map(event -> event.getConcertDate().toString())
                         .collect(Collectors.toList()))
                 .startTime(concert.getStartTime())
                 .endTime(concert.getEndTime())
+                .description(concert.getDescription())
                 .place(concert.getPlace().getName())
                 .price(concert.getPrice())
                 .build();
@@ -135,6 +138,7 @@ public class ConcertService {
                 requestDto.getStartTime(),
                 requestDto.getEndTime(),
                 requestDto.getPrice(),
+                requestDto.getDescription(),
                 place,
                 requestDto.getEventsDate()
         );
@@ -143,12 +147,12 @@ public class ConcertService {
 
         List<Event> events = requestDto.getEventsDate().stream()
                 .map(eventDate -> Event.builder()
-                        .concertDate(LocalDateTime.from(LocalDate.parse(eventDate, formatter)))
+                        .concertDate(LocalDate.parse(eventDate, formatter))
                         .concert(concert)
                         .build())
                 .collect(Collectors.toList());
 
-        eventRepository.deleteAllByConcert(concert);
+//        eventRepository.deleteAllByConcert(concert);
         eventRepository.saveAll(events);
 
         return ConcertResponseDto.builder()
@@ -183,15 +187,9 @@ public class ConcertService {
                 .map(eventDate -> LocalDate.parse(eventDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .collect(Collectors.toList());
 
-        concertRepository.findByPlaceAndEventDateIn(placeId, parsedDates)
+        concertRepository.findByPlaceAndStartTimeAndEventDates(placeId, startTime, parsedDates)
                 .ifPresent(concert -> {
-                    throw new IllegalArgumentException("이미 해당 장소와 날짜에 등록된 콘서트가 존재합니다.");
-                });
-
-        concertRepository.findByPlaceIdAndStartTime(placeId, startTime)
-                .ifPresent(concert -> {
-                    throw new IllegalArgumentException("이미 해당 장소와 시작 시간에 등록된 콘서트가 존재합니다.");
+                    throw new IllegalArgumentException("이미 해당 장소, 시작 시간 및 날짜에 등록된 콘서트가 존재합니다.");
                 });
     }
-
 }
