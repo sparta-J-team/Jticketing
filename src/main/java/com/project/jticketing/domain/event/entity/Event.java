@@ -2,7 +2,10 @@ package com.project.jticketing.domain.event.entity;
 
 import com.project.jticketing.domain.concert.entity.Concert;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
