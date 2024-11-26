@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java:8.0.33'
     //runtimeOnly 'com.mysql:mysql-connector-j'
@@ -54,6 +55,10 @@ dependencies {
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    // Redis - lettuce
+    implementation group: 'io.lettuce', name: 'lettuce-core', version: '6.5.0.RELEASE'
+
 }
 
 tasks.named('test') {
