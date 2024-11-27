@@ -53,7 +53,10 @@ public class ReservationService {
             return result;
         }
         return false;
+    }
 
+    public boolean reserveSeatWithRedisWithAop(UserDetailsImpl authUser, Long eventId, Long seatNum) {
+        return reserveSeatWithoutRedis(authUser, eventId, seatNum);
     }
 
 }
