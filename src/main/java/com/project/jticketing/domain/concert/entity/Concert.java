@@ -57,5 +57,4 @@ public class Concert extends Timestamped {
         this.events.clear();
         this.events.addAll(updatedEvents);
     }
-
 }
