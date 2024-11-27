@@ -1,6 +1,7 @@
 package com.project.jticketing.domain.reservation.service;
 
 import com.project.jticketing.config.redis.LockService;
+import com.project.jticketing.config.redis.RedissonLockService;
 import com.project.jticketing.config.security.UserDetailsImpl;
 import com.project.jticketing.domain.event.repository.EventRepository;
 import com.project.jticketing.domain.reservation.entity.Reservation;
@@ -19,6 +20,8 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     private final LockService lockService;
+
+    private final RedissonLockService redissonLockService;
 
     private final EventRepository eventRepository;
 
@@ -43,6 +46,7 @@ public class ReservationService {
         return true;
     }
 
+    // Lettuce기반의 Lock 구현
     public boolean reserveSeatWithRedis(UserDetailsImpl authUser, Long eventId, Long seatNum) {
         String redisKey = "event:" + eventId + ":seat:" + seatNum;
         if (lockService.tryLock(redisKey)) {
@@ -55,8 +59,23 @@ public class ReservationService {
         return false;
     }
 
+    // Lettuce기반의 Lock구현체의 AOP 적용
     public boolean reserveSeatWithRedisWithAop(UserDetailsImpl authUser, Long eventId, Long seatNum) {
         return reserveSeatWithoutRedis(authUser, eventId, seatNum);
+    }
+
+
+    // Redisson기반의 Lock 구현
+    public boolean reserveSeatWithRedisson(UserDetailsImpl authUser, Long eventId, Long seatNum) {
+        String redisKey = "event:" + eventId + ":seat:" + seatNum;
+        if (redissonLockService.tryLock(redisKey)) {
+            System.out.println("Locking흭득 - " + redisKey);
+            boolean result = reserveSeatWithoutRedis(authUser, eventId, seatNum);
+            System.out.println("Locking해제 - " + redisKey);
+            redissonLockService.unlock(redisKey);
+            return result;
+        }
+        return false;
     }
 
 }
