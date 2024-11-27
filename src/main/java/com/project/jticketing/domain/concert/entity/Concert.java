@@ -11,10 +11,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
+// @NoArgsConstructor(access = AccessLevel.PROTECTED)
+// @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "concerts")
 public class Concert extends Timestamped {
     @Id
