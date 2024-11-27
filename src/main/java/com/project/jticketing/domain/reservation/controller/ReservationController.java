@@ -31,6 +31,7 @@ public class ReservationController {
 		@AuthenticationPrincipal UserDetailsImpl authUser
 	) {
 		User user = authUser.getUser();
-		return ResponseEntity.status(HttpStatus.CREATED).body(reservationService.createReservation(requestDTO, eventId, user));
+		Long seatNum = requestDTO.getSeatNum();
+		return ResponseEntity.status(HttpStatus.CREATED).body(reservationService.createReservation(seatNum, eventId, user));
 	}
 }
