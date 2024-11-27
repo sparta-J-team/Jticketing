@@ -52,8 +52,6 @@ public class ReservationServiceTest {
 
     private Event testEvent;
     private List<UserDetailsImpl> testUserDetails;
-    private Concert testConcert;
-    private Place testPlace;
 
     @BeforeEach
     public void setup() {
@@ -64,14 +62,14 @@ public class ReservationServiceTest {
         placeRepository.deleteAll(); // Clear places
         userRepository.deleteAll(); // Clear users
 
-        testPlace = placeRepository.save(
+        Place testPlace = placeRepository.save(
                 Place.builder()
                         .name("ABCD")
                         .seatCount(500L)
                         .build());
 
 
-        testConcert = concertRepository.save(Concert.builder()
+        Concert testConcert = concertRepository.save(Concert.builder()
                 .title("testConcert")
                 .startTime("18:00")
                 .endTime("21:00")
