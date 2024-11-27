@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -41,22 +42,26 @@ public class ReservationService {
     @Transactional
     public void bookSeatRedis(UserDetailsImpl userDetails, Long eventId, Long seatNum) {
         String lockKey = "reservation:" + eventId + ":" + seatNum;
-        String lockValue = userDetails.getUser().toString();
+        String lockValue = UUID.randomUUID().toString();
         long lockTtl = 5000; // 5 seconds
 
-        if (!lockService.tryLock(lockKey, lockValue, lockTtl)) {
-            throw new RuntimeException("Lock 획득 불가");
-        }
-
         try {
+            // Attempt to acquire the lock
+            if (!lockService.tryLock(lockKey, lockValue, lockTtl)) {
+                throw new RuntimeException("좌석 예매의 lock 획득 실패");
+            }
+
+            // Perform reservation logic within the locked section
             Event event = eventRepository.findById(eventId)
                     .orElseThrow(() -> new IllegalArgumentException("Event not found"));
 
-            reservationRepository.findByEventAndSeatNum(event, seatNum)
-                    .ifPresent(existingReservation -> {
-                        throw new RuntimeException("이미 예약된 자리입니다.");
-                    });
+            // Check seat availability
+            boolean isSeatAlreadyReserved = reservationRepository.existsByEventAndSeatNum(event, seatNum);
+            if (isSeatAlreadyReserved) {
+                throw new RuntimeException("이미 예약된 자리입니다.");
+            }
 
+            // Create and save the reservation
             Reservation reservation = new Reservation(
                     seatNum,
                     LocalDateTime.now(),
@@ -65,6 +70,7 @@ public class ReservationService {
             );
             reservationRepository.save(reservation);
         } finally {
+            // Ensure lock is always released
             lockService.unlock(lockKey, lockValue);
         }
     }

@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     Optional<Reservation> findByEventAndSeatNum(Event event, Long seatNum);
+
+    boolean existsByEventAndSeatNum(Event event, Long seatNum);
 }
