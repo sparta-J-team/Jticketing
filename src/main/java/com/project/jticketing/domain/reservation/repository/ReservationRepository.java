@@ -17,5 +17,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("select r from Reservation r where r.event = :event and r.seatNum = :seatNum")
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    boolean existByEventAndSeatNum(Event event, long seatNum);
+    Optional<Reservation> findByEventAndSeatNum(Event event, long seatNum);
 }

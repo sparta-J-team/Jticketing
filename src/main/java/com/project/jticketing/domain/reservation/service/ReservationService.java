@@ -63,9 +63,14 @@ public class ReservationService {
 
     @Transactional
     public Boolean exclusiveLock(User user, Long eventId, long seatNum) {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event not found"));
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
 
-        if (reservationRepository.existByEventAndSeatNum(event, seatNum)) {
+        // 동시성 문제 해결을 위해 findOne with Lock
+        Optional<Reservation> existingReservation = reservationRepository
+                .findByEventAndSeatNum(event, seatNum);
+
+        if (existingReservation.isPresent()) {
             throw new IllegalStateException("해당 좌석에 대한 예매가 진행 중입니다");
         }
 
