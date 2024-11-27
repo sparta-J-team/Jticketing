@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,9 +71,9 @@ public class ReservationServiceTest {
 
         LocalDate concertDate = LocalDate.of(2024, 12, 25);
 
-//        testEvent = new Event(concertDate, concert);
-//        testEvent = eventRepository.save(testEvent);
-        testEvent = eventRepository.findById(40L).orElse(null);
+        testEvent = new Event(concertDate, concert);
+        testEvent = eventRepository.save(testEvent);
+//        testEvent = eventRepository.findById(40L).orElse(null);
     }
 
 
@@ -118,6 +119,7 @@ public class ReservationServiceTest {
 
         // 모든 스레드가 시작할 때까지 대기하는 CyclicBarrier 설정
         CyclicBarrier barrier = new CyclicBarrier(numberOfThreads);
+        AtomicInteger successCount = new AtomicInteger(0);
 
         for (int i = 0; i < numberOfThreads; i++) {
             executorService.submit(() -> {
@@ -129,7 +131,9 @@ public class ReservationServiceTest {
 
                     boolean result = reservationService.reserveSeatWithRedis(authUser, testEvent.getId(), seatNum);
                     System.out.println("Thread result: " + result);
-
+                    if(result){
+                        successCount.incrementAndGet();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -140,15 +144,9 @@ public class ReservationServiceTest {
         executorService.shutdown();
         executorService.awaitTermination(1, TimeUnit.MINUTES);
 
-        long reservationCount = reservationRepository.countByEventIdAndSeatNum(40L, seatNum);
-
-
-
         System.out.println("seatNum : " + seatNum);
-        System.out.println(reservationCount);
 
-
-        assertThat(reservationCount).isEqualTo(1); // 하나의 예약만 성공해야 함
+        assertThat(successCount.get()).isEqualTo(1);  // 하나의 예약만 성공해야 함
     }
 
 
