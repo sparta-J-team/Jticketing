@@ -59,4 +59,24 @@ public class ReservationService {
         return reserveSeatWithoutRedis(authUser, eventId, seatNum);
     }
 
+    public boolean reserveSeatWithJPALock(UserDetailsImpl authUser, Long eventId, Long seatNum) {
+        // DB에서 해당 좌석의 예약 상태 확인
+        Optional<Reservation> dbReservationOpt = reservationRepository.findByEventIdAndSeatNumWithLock(eventId, seatNum);
+
+        // 이미 예약된 좌석은 예약 불가
+        if (dbReservationOpt.isPresent()) {
+            return false;
+        }
+
+        // 데이터베이스에 예약 저장
+        Reservation reservation = new Reservation();
+        reservation.setSeatNum(seatNum);
+        reservation.setReservationDate(LocalDateTime.now());
+        reservation.setUser(authUser.getUser());
+        reservation.setEvent(eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event not found")));
+        reservationRepository.save(reservation);
+
+        return true;
+    }
+
 }

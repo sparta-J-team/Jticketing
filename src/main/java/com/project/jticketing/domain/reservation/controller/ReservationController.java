@@ -17,15 +17,25 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+    // @PostMapping("/event/{eventId}")
+    // public ResponseEntity<Boolean> reservationSeat(
+    //         @AuthenticationPrincipal UserDetailsImpl authUser,
+    //         @PathVariable Long eventId,
+    //         @RequestBody ReservationRequestDTO reservationRequestDTO ) {
+    //
+    //     return new ResponseEntity<Boolean>(
+    //             reservationService.reserveSeatWithRedisWithAop(authUser,eventId,reservationRequestDTO.getSeatNum()),
+    //             HttpStatus.OK);
+    // }
+
     @PostMapping("/event/{eventId}")
     public ResponseEntity<Boolean> reservationSeat(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
-            @PathVariable Long eventId,
-            @RequestBody ReservationRequestDTO reservationRequestDTO ) {
+        @AuthenticationPrincipal UserDetailsImpl authUser,
+        @PathVariable Long eventId,
+        @RequestBody ReservationRequestDTO reservationRequestDTO ) {
 
         return new ResponseEntity<Boolean>(
-                reservationService.reserveSeatWithRedisWithAop(authUser,eventId,reservationRequestDTO.getSeatNum()),
-                HttpStatus.OK);
+            reservationService.reserveSeatWithJPALock(authUser,eventId,reservationRequestDTO.getSeatNum()),
+            HttpStatus.OK);
     }
-
 }
