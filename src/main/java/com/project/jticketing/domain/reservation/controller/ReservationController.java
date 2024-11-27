@@ -24,7 +24,7 @@ public class ReservationController {
             @RequestBody ReservationRequestDTO reservationRequestDTO ) {
 
         return new ResponseEntity<Boolean>(
-                reservationService.reserveSeatWithRedis(authUser,eventId,reservationRequestDTO.getSeatNum()),
+                reservationService.reserveSeatWithRedisWithAop(authUser,eventId,reservationRequestDTO.getSeatNum()),
                 HttpStatus.OK);
     }
 
