@@ -82,6 +82,7 @@ public class ReservationService {
         reservationRepository.save(reservation);
         return true;
     }
+    // 외래키 잠금 전파: 외래키가 있는 테이블에 write 시 잠금 전파가 일어나면 데드락이 발생할 수 있다.
 
     //Redisson을 통해 Lock 구현
     public boolean reserveSeatWithRedisson(UserDetailsImpl authUser, Long eventId, Long seatNum) {
