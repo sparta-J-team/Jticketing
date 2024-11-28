@@ -5,16 +5,19 @@ import com.project.jticketing.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
 @Entity
+@Setter
 @NoArgsConstructor
 @Table(name = "users")
 public class User extends Timestamped {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true)
     private String email;
 
@@ -29,4 +32,12 @@ public class User extends Timestamped {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    public User(String email, String password, String nickname, String address, String phoneNumber, UserRole userRole) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.userRole = userRole;
+    }
 }

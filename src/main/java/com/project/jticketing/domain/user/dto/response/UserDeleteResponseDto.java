@@ -1,4 +1,4 @@
-package com.project.jticketing.domain.reservation.dto.request;
+package com.project.jticketing.domain.user.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ReservationRequestDTO {
-    long seatNum;
+public class UserDeleteResponseDto {
+    Long id;
 }
