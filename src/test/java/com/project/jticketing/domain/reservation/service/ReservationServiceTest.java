@@ -77,7 +77,6 @@ public class ReservationServiceTest {
 
         testEvent = new Event(concertDate, concert);
         testEvent = eventRepository.save(testEvent);
-//        testEvent = eventRepository.findById(40L).orElse(null);
     }
 
     @Test
