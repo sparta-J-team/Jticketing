@@ -80,8 +80,9 @@ public class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("Lock 구현  X -> 테스트 실패")
     void reserveSeatWithoutRedis_concurrentTest() throws InterruptedException {
-        final int numberOfThreads = 10;
+        final int numberOfThreads = 100;
         final Long seatNum = 1L;
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
 
