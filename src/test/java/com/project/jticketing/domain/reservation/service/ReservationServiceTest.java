@@ -169,7 +169,7 @@ public class ReservationServiceTest {
         assertThat(savedReservation.get().getSeatNum()).isEqualTo(1L);
     }
 
-    @Test
+   @Test
     @DisplayName("배타적 락 테스트")
     void testExclusiveLock() throws InterruptedException {
         final int numberOfThreads = 1;
@@ -205,5 +205,44 @@ public class ReservationServiceTest {
         Optional<Reservation> savedReservation = reservationRepository.findByEventIdAndSeatNum(testEvent.getId(), seatNum);
 
         assertThat(savedReservation).isPresent(); // 예약이 존재하는지 확인
+    }
+  
+  @Test
+    @DisplayName("예매 동시성 테스트 (Redisson)")
+    void reserveSeatWithRedisson_concurrentTest() throws InterruptedException {
+        final int numberOfThreads = 10;
+        final Long seatNum = 4L;
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
+
+        // 모든 스레드가 시작할 때까지 대기하는 CyclicBarrier 설정
+        CyclicBarrier barrier = new CyclicBarrier(numberOfThreads);
+        AtomicInteger successCount = new AtomicInteger(0);
+
+        for (int i = 0; i < numberOfThreads; i++) {
+            executorService.submit(() -> {
+                try {
+                    // 모든 스레드가 이 지점에 도달할 때까지 대기
+                    barrier.await();
+
+                    UserDetailsImpl authUser = new UserDetailsImpl(testUser);
+
+                    boolean result = reservationService.reserveSeatWithRedisson(authUser, testEvent.getId(), seatNum);
+                    System.out.println("Thread result: " + result);
+                    if(result){
+                        successCount.incrementAndGet();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        // 스레드 작업이 완료될 때까지 기다리기
+        executorService.shutdown();
+        executorService.awaitTermination(1, TimeUnit.MINUTES);
+
+        System.out.println("seatNum : " + seatNum);
+
+        assertThat(successCount.get()).isEqualTo(1);  // 하나의 예약만 성공해야 함
     }
 }
