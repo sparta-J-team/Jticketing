@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,8 +17,19 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @PostMapping("/event/{eventId}")
+    @PostMapping("/event/Lettuce/{eventId}")
     public ResponseEntity<Boolean> reservationSeat(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @PathVariable Long eventId,
+            @RequestBody ReservationRequestDTO reservationRequestDTO ) {
+
+        return new ResponseEntity<Boolean>(
+                reservationService.reserveSeatWithRedisWithAop(authUser,eventId,reservationRequestDTO.getSeatNum()),
+                HttpStatus.OK);
+    }
+
+    @PostMapping("/event/exclusiveLock/{eventId}")
+    public ResponseEntity<Boolean> reservationSeat1(
             @AuthenticationPrincipal UserDetailsImpl authUser,
             @PathVariable Long eventId,
             @RequestBody ReservationRequestDTO reservationRequestDTO ) {
@@ -31,4 +41,22 @@ public class ReservationController {
                 HttpStatus.OK);
     }
 
+    @PostMapping("/event/redisson/{eventId}")
+    public ResponseEntity<Boolean> reservationSeat2(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @PathVariable Long eventId,
+            @RequestBody ReservationRequestDTO reservationRequestDTO ) {
+
+        return new ResponseEntity<Boolean>(
+                reservationService.reserveSeatWithRedisson(authUser,eventId,reservationRequestDTO.getSeatNum()),
+                HttpStatus.OK);
+    }
+
 }
+
+
+
+
+
+
+
