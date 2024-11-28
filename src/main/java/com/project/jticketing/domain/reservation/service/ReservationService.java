@@ -1,6 +1,7 @@
 package com.project.jticketing.domain.reservation.service;
 
 import com.project.jticketing.config.redis.LockService;
+import com.project.jticketing.config.redis.RedissonLockService;
 import com.project.jticketing.config.security.UserDetailsImpl;
 import com.project.jticketing.domain.event.repository.EventRepository;
 import com.project.jticketing.domain.reservation.entity.Reservation;
@@ -21,6 +22,8 @@ public class ReservationService {
     private final LockService lockService;
 
     private final EventRepository eventRepository;
+
+    private final RedissonLockService redissonLockService;
 
     @Transactional
     public boolean reserveSeatWithoutRedis(UserDetailsImpl authUser, Long eventId, Long seatNum) {
@@ -57,6 +60,26 @@ public class ReservationService {
 
     public boolean reserveSeatWithRedisWithAop(UserDetailsImpl authUser, Long eventId, Long seatNum) {
         return reserveSeatWithoutRedis(authUser, eventId, seatNum);
+    }
+
+    //Redisson을 통해 Lock 구현
+    public boolean reserveSeatWithRedisson(UserDetailsImpl authUser, Long eventId, Long seatNum) {
+        String lockKey = "event:" + eventId + ":seat:" + seatNum;
+
+        try {
+            // Try to acquire lock with 5 seconds wait time and 3 seconds lease time
+            if (redissonLockService.tryLock(lockKey, 5000, 3000)) {
+                try {
+                    return reserveSeatWithoutRedis(authUser, eventId, seatNum);
+                } finally {
+                    redissonLockService.unlock(lockKey);
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            // Handle any unexpected exceptions
+            return false;
+        }
     }
 
 }
