@@ -3,9 +3,11 @@ package com.project.jticketing.domain.reservation.service;
 import com.project.jticketing.config.redis.LockService;
 import com.project.jticketing.config.redis.RedissonLockService;
 import com.project.jticketing.config.security.UserDetailsImpl;
+import com.project.jticketing.domain.event.entity.Event;
 import com.project.jticketing.domain.event.repository.EventRepository;
 import com.project.jticketing.domain.reservation.entity.Reservation;
 import com.project.jticketing.domain.reservation.repository.ReservationRepository;
+import com.project.jticketing.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +64,25 @@ public class ReservationService {
         return reserveSeatWithoutRedis(authUser, eventId, seatNum);
     }
 
+
+    @Transactional
+    public Boolean exclusiveLock(User user, Long eventId, long seatNum) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+
+        // 동시성 문제 해결을 위해 findOne with Lock
+        Optional<Reservation> existingReservation = reservationRepository
+                .findByEventAndSeatNum(event, seatNum);
+
+        if (existingReservation.isPresent()) {
+            throw new IllegalStateException("해당 좌석에 대한 예매가 진행 중입니다");
+        }
+
+        Reservation reservation = new Reservation(seatNum, LocalDateTime.now(), user, event);
+        reservationRepository.save(reservation);
+        return true;
+    }
+
     //Redisson을 통해 Lock 구현
     public boolean reserveSeatWithRedisson(UserDetailsImpl authUser, Long eventId, Long seatNum) {
         String lockKey = "event:" + eventId + ":seat:" + seatNum;
@@ -81,5 +102,6 @@ public class ReservationService {
             return false;
         }
     }
+
 
 }

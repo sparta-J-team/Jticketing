@@ -53,7 +53,7 @@ public class ReservationServiceTest {
     @BeforeEach
     void setUp() {
         // 테스트용 사용자 및 이벤트 생성
-        testUser = userRepository.save(new User("testuser6@example.com", "!Test1234", "tester", "address", "010-0000-0000", UserRole.USER));
+        testUser = userRepository.save(new User("testuser3@example.com", "!Test1234", "tester", "address", "010-0000-0000", UserRole.USER));
 
         testPlace = new Place("aaa",100L);
         testPlace = placeRepository.save(testPlace);
@@ -169,7 +169,45 @@ public class ReservationServiceTest {
         assertThat(savedReservation.get().getSeatNum()).isEqualTo(1L);
     }
 
-    @Test
+   @Test
+    @DisplayName("배타적 락 테스트")
+    void testExclusiveLock() throws InterruptedException {
+        final int numberOfThreads = 1;
+        final Long seatNum = 1L;
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
+
+        // 모든 스레드가 시작할 때까지 대기하는 CyclicBarrier 설정
+        CyclicBarrier barrier = new CyclicBarrier(numberOfThreads);
+
+        for (int i = 0; i < numberOfThreads; i++) {
+            executorService.submit(() -> {
+                try {
+                    // 모든 스레드가 이 지점에 도달할 때까지 대기
+                    barrier.await();
+
+                    boolean result = reservationService.exclusiveLock(testUser, testEvent.getId(), seatNum);
+                    System.out.println("Thread result: " + result);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        // 스레드 작업이 완료될 때까지 기다리기
+        executorService.shutdown();
+        executorService.awaitTermination(1, TimeUnit.MINUTES);
+
+        long reservationCount = reservationRepository.countByEventIdAndSeatNum(testEvent.getId(), seatNum);
+        assertThat(reservationCount).isEqualTo(1); // 하나의 예약만 성공해야 함
+
+        // 저장된 Reservation 검증
+        Optional<Reservation> savedReservation = reservationRepository.findByEventIdAndSeatNum(testEvent.getId(), seatNum);
+
+        assertThat(savedReservation).isPresent(); // 예약이 존재하는지 확인
+    }
+  
+  @Test
     @DisplayName("예매 동시성 테스트 (Redisson)")
     void reserveSeatWithRedisson_concurrentTest() throws InterruptedException {
         final int numberOfThreads = 10;
