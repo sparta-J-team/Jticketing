@@ -1,26 +1,25 @@
 
-# 🍔 스팡잇츠 (SpangEats) README
+# JTicketing README
 
 ## 프로젝트 소개
 
-- **진행 기간**: `2024-11-01` ~ `2024-11-07`
-- 스팡잇츠는 배달의민족과 쿠팡이츠를 벤치마킹하여 개발된
-  **배달 서비스 앱의 백엔드** 프로젝트입니다.
-- 사용자는 다양한 가게의 메뉴를 **검색하고 주문**할 수 있으며,
-  사장님은 **가게와 메뉴를 관리**할 수 있습니다.
-- 주요 기능으로는 회원 관리, 가게 및 메뉴 관리, 주문 관리, 리뷰 기능 등이 포함됩니다.
+- **진행 기간**: `2024-11-22` ~ `2024-11-29`
+- JTicketing은 인터파크 티켓팅을 벤치마킹하여 개발된
+  **티켓팅 백엔드 서비스** 프로젝트입니다.
+- 사용자는 콘서트에 대한 **검색 및 예매**를 할 수 있으며,
+  관리자는 **콘서트 및 장소를 생성**할 수 있습니다.
+- 주요 기능으로는 동시성 제어입니다.
 
 <br>
 
 ---
 
+
 ## 팀원 구성
 
 <div align="center">
 
-| **이한식** | **김신희** | **박지예** | **지창현** | **최서영** |
-| :------: |  :------: | :------: | :------: | :------: |
-| <img src="images/이한식.png" height="150"> <br/> [@coldrice99](https://github.com/coldrice99) | <img src="images/김신희.png" height="150"> <br/> [@shinheekim](https://github.com/shinheekim) | <img src="images/박지예.png" height="150"> <br/> [@bbobsang](https://github.com/bbobsang) | <img src="images/지창현.png" height="150"> <br/> [@tesbro1194](https://github.com/tesbro1194) | <img src="images/최서영.png" height="150"> <br/> [@seoyeong-4811](https://github.com/seoyeong-4811) |
+<img width="646" alt="image" src="https://github.com/user-attachments/assets/7321ec27-4a74-4290-bf9a-7f7b38515e66">
 
 </div>
 
@@ -37,13 +36,17 @@
 ## 2. 채택한 개발 기술과 브랜치 전략
 
 <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"><img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"><img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
-<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"><img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white"><img src="https://img.shields.io/badge/postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white">
+<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"><img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white"><img src="https://img.shields.io/badge/postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white"><img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white">
+
+
+
 
 ### 개발 환경
 
 - **협업 툴**: Slack, Notion
 - **Back-end**: Java, Spring Boot, JPA
 - **Database**: MySQL
+- **Cache** : Redis
 - **버전 및 이슈관리**: GitHub, GitHub Issues
 
 ### Spring Boot & JPA
@@ -70,26 +73,15 @@
 
 ### 와이어프레임
 
-#### 1. 회원 관리
-<img src="images/와이어프레임/회원기능 와이어프레임.png" alt="회원 기능 와이어프레임" width="1200">
-
-#### 2. 가게 관리
-<img src="images/와이어프레임/가게 와이어프레임.png" alt="가게 와이어프레임" width="1200">
-
-#### 3. 메뉴 관리
-<img src="images/와이어프레임/메뉴 와이어프레임.png" alt="메뉴 와이어프레임" width="1200">
-
-#### 4. 주문 관리
-<img src="images/와이어프레임/주문 와이어프레임.png" alt="주문 와이어프레임" width="1200">
-
-#### 5. 리뷰 관리
-<img src="images/와이어프레임/리뷰 와이어프레임.png" alt="리뷰 와이어프레임" width="1200">
+<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Ff989b27a-0933-4dc0-b632-935a8b1c5e47%2FGroup_7.png?table=block&id=d99fbd20-30d8-4c00-af2b-016e6d55dc93&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=2000&userId=ee2b421d-09e8-4715-976c-15739a8e1e0b&cache=v2" width="1200">
 
 ### ERD (Entity Relationship Diagram)
 
 서비스의 데이터베이스 구조는 아래 ERD에 기반합니다. 각 엔터티와 관계를 통해 효율적인 데이터 관리를 고려했습니다.
 
-<img src="images/스팡잇츠 erd.png" alt="스팡잇츠 ERD" width="1200">
+<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fcc3ef161-423e-4dc1-b983-96b10feff309%2Fimage.png?table=block&id=10e20235-ed96-4dfe-b066-f0d618cda8f1&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=2000&userId=ee2b421d-09e8-4715-976c-15739a8e1e0b&cache=v2" width="1200">
+
+
 
 <br>
 
@@ -98,201 +90,124 @@
 ## 프로젝트 구조
 
 ```
-├── README.md
-├── .gitignore
-├── build.gradle
-├── src
-│   ├── main
-│   │   ├── java
-│   │   │   └── com.sparta.spangeats
-│   │   │       ├── common                # 공통 유틸리티 및 기능
-│   │   │       ├── domain                # 주요 도메인별 패키지
-│   │   │       │   ├── address           # 주소 관련 엔티티 및 로직
-│   │   │       │   ├── auth              # 인증 관련 로직
-│   │   │       │   ├── basket            # 장바구니 기능 관련
-│   │   │       │   ├── cart              # 장바구니 내 아이템 관리
-│   │   │       │   ├── member            # 사용자 정보 관리
-│   │   │       │   ├── menu              # 메뉴 관리
-│   │   │       │   ├── order             # 주문 관리
-│   │   │       │   ├── orders            # 주문 상태 관리
-│   │   │       │   ├── review            # 리뷰 기능 관련
-│   │   │       │   └── store             # 가게 정보 관리
-│   │   │       └── security              # 보안 관련 설정
-│   │   │           ├── config            # 보안 설정 구성
-│   │   │           └── filter            # 인증 및 필터링 기능
-│   │   └── resources
-│   └── test
-│       └── java
-│           └── com.sparta.spangeats
-│               ├── authtest             # 인증 관련 테스트
-│               ├── carttest             # 장바구니 관련 테스트
-│               └── review               # 리뷰 관련 테스트
-└── SpangEatsApplicationTests.java
+└─src
+    ├─main
+    │  ├─java
+    │  │  └─com
+    │  │      └─project
+    │  │          └─jticketing
+    │  │              ├─aop
+    │  │              ├─config
+    │  │              │  ├─redis
+    │  │              │  └─security
+    │  │              └─domain
+    │  │                  ├─auth
+    │  │                  │  ├─controller
+    │  │                  │  ├─dto
+    │  │                  │  │  ├─request
+    │  │                  │  │  └─response
+    │  │                  │  └─service
+    │  │                  ├─common
+    │  │                  │  └─entity
+    │  │                  ├─concert
+    │  │                  │  ├─controller
+    │  │                  │  ├─dto
+    │  │                  │  │  ├─request
+    │  │                  │  │  └─response
+    │  │                  │  ├─entity
+    │  │                  │  ├─repository
+    │  │                  │  └─service
+    │  │                  ├─event
+    │  │                  │  ├─entity
+    │  │                  │  └─repository
+    │  │                  ├─place
+    │  │                  │  ├─controller
+    │  │                  │  ├─dto
+    │  │                  │  │  ├─request
+    │  │                  │  │  └─response
+    │  │                  │  ├─entity
+    │  │                  │  ├─repository
+    │  │                  │  └─service
+    │  │                  ├─reservation
+    │  │                  │  ├─controller
+    │  │                  │  ├─dto
+    │  │                  │  │  ├─request
+    │  │                  │  │  └─response
+    │  │                  │  ├─entity
+    │  │                  │  ├─repository
+    │  │                  │  └─service
+    │  │                  └─user
+    │  │                      ├─controller
+    │  │                      ├─dto
+    │  │                      │  ├─request
+    │  │                      │  └─response
+    │  │                      ├─entity
+    │  │                      ├─enums
+    │  │                      ├─repository
+    │  │                      └─service
+    │  └─resources
+    └─test
+        └─java
+            └─com
+                └─project
+                    └─jticketing
+                        └─domain
+                            └─reservation
+                                └─service
 ```
 
 <br>
 
 ---
 
-## 역할 분담
+## 구현 목표
 
-### 🧑‍💻 이한식
-- **🧑‍💻 이한식**: 회원 기능 (로그인, 회원가입, 회원탈퇴, 카카오 소셜 로그인, 관리자 기능)
+### 1️⃣  **필수 구현 기능**
 
-### 👩‍💻 김신희
-- **👩‍💻 김신희**: 주문 기능 (주문 생성, 상태 변경, 로그 기록), 회원 주소 관리, 장바구니 기능(+스케줄러)
+- [ ]  **순간적으로 많은 요청이 쏟아질 수 있는 어플리케이션 기획 및 개발**
+    - 순간적으로 요청이 쏟아지더라도 데이터 정합성이 완벽하게 지켜져야하는 비즈니스 필요
+    - **위 비즈니스는 필수적으로 포함되어야하며, 이외의 요구사항은 자유롭게 기획에 포함**
+    - **예시)**
+        1. 콘서트 티켓팅 어플리케이션
+        2. 선착순 할인쿠폰 이벤트 어플리케이션
+- [ ]  **동시성 이슈를 검증할 수 있는 테스트 코드 작성**
+    - 여러 `Thread` 가 동시에 동시성 이슈가 발생하는 메소드를 호출하는 시나리오를 토대로 테스트 코드를 작성
+        - `ExecutorService` , `CyclicBarrier`  활용가능
+        - `Coroutine`  활용 가능
+    - **이 시점에 작성된 테스트는 실패해야 정상이다.**
+- [ ]  **Redis 를 이용해 Lock 을 구현함으로써 동시성 이슈 제어**
+    - `Lettuce` 를 이용해 Redis Lock 구현 **(`Redisson` 사용 금지!)**
+    
+    <aside>
+    💡 **Redis Lock 을 구현할 때 고려해야할 것!**
+      
+    1) Lock 획득에 실패했을 때 어떻게 할 것인가?
+    2) Redis 를 이용해 Lock 을 구현한 이유는 무엇일까?
+    3) Redis 에서 Lock 을 걸때 Key 로 어떤 값을 사용했고, 왜 해당 Key 를 이용해 Lock 을 만들었을까?
+    
+    </aside>
+    
+    - **기본구조 Hint**
+        - Redis Lock 을 처리하는 별도 `LockRedisRepository` , `LockService` 객체를 생성
+        - 다른 비즈니스 로직에서는 `LockService`  만 의존하는 구조로 개발
+- [ ]  **앞서 작성했던 테스트 코드를 통해 동시성 이슈에 대한 검증**
 
-### 👩‍💻 박지예
-- **👩‍💻 박지예**: 메뉴 관리 (메뉴 추가, 수정, 삭제, 카테고리)
+### 2️⃣  선택 구현 기능
 
-### 최서영
-- **👨‍💻 최서영**: 가게 관리 (가게 등록, 조회, 수정, 폐업, 공지)
+- [ ]  **Lock 을 AOP 방식으로 적용할 수 있도록 코드 리팩토링**
+    - `Spring AOP` 혹은 `Kotlin Trailing Lambda` 를 이용한 AOP 구조 개발 (Kotlin 적용 시)
 
-### 👨‍💻 지창현
-- **👩‍💻 지창현**: 리뷰 기능 (리뷰 작성, 수정, 삭제, 가게 별 조회, 회원 별 조회)
+### 3️⃣  심화 구현 기능
 
-<br>
+- [ ]  **Redis 대신 MySQL 을 이용해 Lock 구현**
+    - MySQL 로 Lock 을 구현할 경우 장단점이 무엇인지 꼭! 확인하기
 
----
+<aside>
+💡 **Hint.**
+ - JPA 비관적 Lock
+ - MySQL Exclusive Lock
 
-## 페이지별 기능
+</aside>
 
-### 회원 기능
-
-#### 회원가입 및 로그인
-
-- **회원가입**: 이메일과 비밀번호를 입력받아 검증한 후, 비밀번호는 CustomPasswordEncoder를 사용해 암호화하여 저장합니다.
-- **일반 로그인**: 로그인 시, 검증을 통과하면 JWT 토큰을 발급하여 사용자 인증을 처리합니다.
-- **관리자 로그인**: 요청 바디에 추가로 `admin` 키를 입력받아 검증을 거친 뒤 로그인 가능하도록 구현했습니다.
-
-#### 회원 정보 조회 및 수정
-
-- **정보 조회**: 사용자가 자신의 정보를 조회할 수 있는 기능을 제공합니다.
-- **정보 수정**: 사용자가 자신의 정보를 업데이트할 수 있습니다.
-
-#### 회원 탈퇴
-
-- **탈퇴 처리**: 사용자 본인의 요청으로 계정을 탈퇴 처리할 수 있으며, 탈퇴된 계정은 재사용이 불가하도록 관리합니다.
-
-#### 관리자 기능
-
-- **전체 회원 조회**: 관리자 권한으로 전체 회원의 정보를 조회할 수 있는 기능을 제공하여 사용자 관리가 가능하도록 했습니다.
-
-#### 카카오 소셜 로그인
-
-- **제한 사항**: 카카오 API를 통한 소셜 로그인으로 사용자 아이디, 이메일, 닉네임 정보를 받아 로그인할 수 있지만, 비밀번호 검증이 필요한 일부 기능에는 접근이 제한됩니다.
-
----
-
-### 가게 등록 및 조회
-
-- 사장님 권한을 가졌을 경우에만 최대 3개 까지 가게 생성이 가능
-- 가게 공지 입력시, 금지어는 입력 불가
-- 특정 가게 조회시 메뉴도 함께 조회 가능
-- 이름으로 가게 조회시, open 상태인 가게만 최근등록일 기준으로 조회됨
-
----
-
-### 메뉴 관리
-
-- **메뉴 관리**: 가게 내 메뉴 추가, 수정, 삭제가 가능합니다. 삭제된 메뉴는 조회 시 표시되지 않도록 설정됩니다.
-
----
-
-### 장바구니 및 주문 관리
-
-#### 장바구니
-
-- 장바구니 메뉴들을 담을 수 있습니다.
-  - 다른 매장의 메뉴들을 담는 경우 이미 있던 장바구니들을 초기화 하고 담습니다.
-  - 또한 같은 매장의 같은 메뉴를 또 담는 경우에는 수량을 업데이트하고, 없으면 새로운 장바구니 항목을 생성하여 저장합니다.
-- 장바구니 조회, 수량 업데이트, 삭제가 가능합니다.
-- 하루 이상 지난 장바구니 항목들을 삭제합니다.
-  이 작업은 스케줄러를 통해  매일 자정에 자동으로 진행됩니다.
-
-#### 주문 관리
-
-- 주문을 생성할 수 있습니다. 장바구니에 담았던 기록들을 프론트에서 리스트로 넘겨준 후 각 주문 항목에 대한 Menu 존재 여부를 확인한 후 주문과 메뉴 사이의 중간 테이블 또한 생성해줍니다.
-  - 최소 주문 금액 이상 주문해야 주문이 가능합니다.
-  - 오픈 시간 전, 마감 시간 이후는 주문이 불가합니다.
-- 사용자는 특정 주문, 모든 주문 내역을 조회할 수 있습니다.
-- 주문 상태는 총 4가지로, REQUEST, CANCEL, ACCEPTED, REJECTED의 상태가 있습니다.
-  추후에는 배달 시작, 배달 완료까지 주문 상태를 늘려보려고 합니다.
-- 주문을 생성한 경우, 또 상태가 변경된 후에 모두 로그 관리를 합니다.
-
----
-
-### 리뷰 작성 및 조회
-
-- 객체를 참조하지 않고, 필드를 가지는 것으로 구현
-- 리뷰 작성 시 주문 하나 당 한 건 가능
-- 모든 조회 - 페이지네이션
-- 가게 별 조회, 회원 별 조회
-- 가게 별 조회 시 JPQL 사용
-- 각 메서드에 대한 테스트 코드 작성 완료
-
-<br>
-
----
-
-## 개선 목표
-
-### 회원 기능
-
-- **검증 로직의 일관성 유지**: 서비스 레이어 또는 필터 중 한 곳에 검증 로직을 일관되게 통합해 코드 가독성과 유지보수성을 높일 예정입니다.
-- **관리자 기능 확장**: ADMIN 역할의 관리자 기능 추가를 통해 다양한 관리 기능을 추가할 예정입니다.
-- **카카오 소셜 로그인 제한사항 개선**: 카카오 API의 권한 한계로 인해 일부 기능이 제한되어, 대체 인증 방안 모색 예정입니다
-
-### 가게 및 메뉴 기능
-
-- **연관관계 개선**: 가게와 메뉴 간의 1:N(양방향) 관계에서 참조 순환 문제 해결을 위해 필요한 정보만 반환하도록 개선 예정입니다.
-- **카테고리별 조회 기능 추가**: 가게를 카테고리별로 조회할 수 있도록 기능 확장 예정입니다.
-
-### 메뉴 관리 기능
-
-- **카테고리 및 옵션 기능 추가**: 카테고리와 옵션 기능을 구현한 프로젝트의 포스트맨 테스트를 완료할 예정입니다.
-
-### 주문 관리 기능
-
-- 예외 처리: 실제 서비스를 다시 떠올려 보면서 추가될만한 예외처리들을 적용해보고,
-- 테스트 코드 작성
-
-### 리뷰 관리 기능
-
-- 예외 처리 추가
-- 주문 완료 후 리뷰는 14일 이내 작성
-- 리뷰 작성 후 수정은 리뷰 작성 7일 이내 가능
-- 연관 관계를 맺지 않아 회원이 탈퇴 이후에도 데이터가 DB에 남는 문제 해결
-
-<br>
-
----
-## 프로젝트 후기
-
-### 🧑‍💻 이한식
-> - 이번 프로젝트에서 **회원가입, 로그인, 회원탈퇴 기능**을 구현하며, Spring Security와 JWT 방식의 이점에 대해 깊이 이해하게 되었습니다. 초기에는 패스워드 인코더를 직접 구현해야 한다는 발제 조건 때문에 JWT만으로 인증을 구현하려 했지만, Spring Security의 내장 기능이 보안성과 유지보수성 측면에서 우수하다는 것을 알게 되어 최종적으로 Spring Security와 JWT 방식을 도입했습니다.
-
-> - 또한, 인증 및 인가 필터를 직접 구현하고, USER와 OWNER 외에 **ADMIN 역할**을 추가해 관리자만 접근할 수 있는 기능을 `/api/admin` 엔드포인트로 설정했습니다. 비록 관리자 권한 기능으로 전체 회원 정보 조회 기능만 구현이 됐지만, 다양한 관리 기능을 확장할 계획도 세웠습니다.
-
-> - 마지막으로, **카카오 소셜 로그인** 기능을 구현했으나 API 권한 한계로 인해 아이디, 이메일, 닉네임 정보만 활용할 수 있어 패스워드 검증이 필요한 일부 기능에 접근하지 못한 점은 아쉬웠습니다. 이러한 제한 사항을 어떻게 개선할지에 대해 고민하게 되는 계기가 되었습니다.
-
-### 👩‍💻 김신희
-> - 처음에는 왜 장바구니가 주문과 메뉴의 중간테이블이 되는 것보다 장바구니는 view로 보여지고 따로 중간 테이블을 만드는 것이 좋은 지 이해하지 못했었습니다. 하지만 튜터님들의 설명과 고민을 오래해본 결과 후자를 선택하는 것이 더 낫다고 판단하였습니다. 장바구니의 경우는 사용자가 주문할 메뉴들을 고민하는 중간 상태를 나타냅니다. 따라서 실제 주문하지 않고도 항목을 자유롭게 추가하고 제거할 수 있는 상태로써 “작업 영역”에 가깝습니다. 따라서 **주문과 장바구니 테이블을 따로 만들어서 확정된 항목들이 넘어오는 것이 더 데이터의 일관성을 지킬 수 있다고 판단**했습니다.
-    또한 장바구니와 주문을 분리함으로써 실제 주문 기록에 영향을 주지 않고 사용자가 관심 있는 현재 항목을 보여줄 수 있다는 것이 좋다고 판단했습니다. ERD를 짜다보면 항상 이유가 있는 다른 방법들이 있어서 새롭고 재밌다고 느꼈습니다.
-> - 처음 Rebase 전략 및 issue에 맞는 브랜치 전략을 사용해봤는데, 생각보다 어렵지 않게 경험할 수 있어서 좋았습니다. 앞으로도 issue 생성 후에 해당 이슈에 맞는 브랜치를 만들어 개발하려고 합니다.
-
-### 👩‍💻 박지예
-> - 기능을 구현하는 과정에서 많은 실수를 겪었는데, 그 실수를 해결하지 못하고 끝내는 것이 매우 속상하고 아쉽습니다.  향후에는 시간관리를 체계적으로 분배하고 관리해야할 필요성이 있다고 느꼈습니다. 실력이 모자라 팀원 분들께 피해만 끼친것같아 죄송스럽기도 한 마음입니다. 그래도 좋은 팀원분들 덕분에 무사히 프로젝트를 완수할 수 있었던것 같습니다. 고생들 많으셨고 감사했습니다
-
-### 👨‍💻 지창현
-> 다양한 방식으로 구현을 할 수 있고, 방식마다 장단점이 있다는 걸 확실히 느꼈습니다. 예를 들자면 가게 별 리뷰를 조회할 때, 가게와 리뷰의 연관 관계가 없는 문제를 어떻게 해결할 것인가? 라는 문제가 있습니다.
-> 1. 가게와 리뷰의 ID를 갖는 테이블을 만든다.
-> 2. 가게와 리뷰가 연관관계를 갖게 한다.
-> 3. `가게 - 주문 - 리뷰` 라는 연결고리를 이용하여 로직으로 풀어낸다.
-> 4. 연관 관계를 맺지 않고 필요로 하는 엔티티의 id를 필드로 갖게 한다.
-> 저는 4번을 선택했습니다.
-> 코드 리뷰를 많이 하지 못해 아쉽습니다. 
-> 제가 부족해서 팀원들에게 미안합니다….
-
-### 👩‍💻 최서영
-> - 팀원들과 큰 문제와 갈등 없이 프로젝트를 마무리 할 수 있어서 다행인것 같습니다.  이번 프로젝트에서 가장 기본적인 crud를 담당하였는데, 팀원들의 자세한 코드리뷰와 조언들을 통해 부족했던 부분들을 보완할 수 있었습니다. 또한 제가 담당하지 않았던 회원가입/로그인 부분과 연관관계 부분들을 참고하면서 공부가 많이 되었습니다. 브랜치 전략과 rebase 사용 전략은 아직도 헷갈리는 부분들이 많아서 이 부분도 공부가 필요하겠다는 생각을 했습니다. 배운것도 많고 부족함도 많이 느끼게 되는 프로젝트 였습니다.
+- [ ]  **`Redisson` 을 이용한 Redis Lock 개발**
+    - `Lettuce` 가 아니라 `Redisson` 을 사용한 이유를 설명할 수 있어야한다.
