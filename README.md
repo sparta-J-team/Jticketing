@@ -73,13 +73,13 @@
 
 ### 와이어프레임
 
-<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Ff989b27a-0933-4dc0-b632-935a8b1c5e47%2FGroup_7.png?table=block&id=d99fbd20-30d8-4c00-af2b-016e6d55dc93&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=2000&userId=ee2b421d-09e8-4715-976c-15739a8e1e0b&cache=v2" width="1200">
+<img src="https://img.notionusercontent.com/s3/prod-files-secure%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Ff989b27a-0933-4dc0-b632-935a8b1c5e47%2FGroup_7.png/size/w=2000?exp=1732928212&sig=XvqZtGV8RAA0HReo9pH4f5xXigy5m6OAgzbNNiMIo2w" width="1200">
 
 ### ERD (Entity Relationship Diagram)
 
 서비스의 데이터베이스 구조는 아래 ERD에 기반합니다. 각 엔터티와 관계를 통해 효율적인 데이터 관리를 고려했습니다.
 
-<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fcc3ef161-423e-4dc1-b983-96b10feff309%2Fimage.png?table=block&id=10e20235-ed96-4dfe-b066-f0d618cda8f1&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=2000&userId=ee2b421d-09e8-4715-976c-15739a8e1e0b&cache=v2" width="1200">
+<img src="https://img.notionusercontent.com/s3/prod-files-secure%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fcc3ef161-423e-4dc1-b983-96b10feff309%2Fimage.png/size/w=2000?exp=1732928307&sig=rU_V0TMuZIsixZBqmMWAbyrcGEjefK10Lmmlvq4X1nc" width="1200">
 
 
 
